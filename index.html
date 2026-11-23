@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тест на совместимость: Софуня & Тима ❤️</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:linear-gradient(135deg,#ffe0ec 0%,#fff0f5 40%,#f0e6ff 100%);
+    min-height:100vh;color:#2a2a3a;padding:16px;display:flex;justify-content:center;align-items:flex-start}
+  #app{width:100%;max-width:560px;background:#fff;border-radius:24px;
+    box-shadow:0 20px 60px rgba(180,100,140,.15);padding:28px;margin:20px 0}
+  h1{font-size:22px;margin-bottom:10px;line-height:1.3}
+  h2{font-size:18px;margin-bottom:12px;color:#4a3a52}
+  .desc{color:#6b6b7b;font-size:15px;line-height:1.5;margin-bottom:18px}
+  .block-label{display:inline-block;font-size:12px;font-weight:600;color:#c2185b;
+    background:#ffe0ec;padding:4px 10px;border-radius:12px;margin-bottom:12px;
+    text-transform:uppercase;letter-spacing:.5px}
+  .progress-wrap{height:6px;background:#f0e0e8;border-radius:3px;overflow:hidden;margin-bottom:20px}
+  .progress-bar{height:100%;background:linear-gradient(90deg,#ff6b9d,#c2185b);width:0;
+    transition:width .3s ease;border-radius:3px}
+  .q-num{font-size:13px;color:#9b9baa;margin-bottom:6px}
+  .q-text{font-size:18px;font-weight:600;line-height:1.4;margin-bottom:18px;color:#2a2a3a}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{background:#faf7fb;border:2px solid #f0e6f2;border-radius:14px;padding:14px 16px;
+    font-size:15px;cursor:pointer;text-align:left;font-family:inherit;color:inherit;
+    transition:all .15s;line-height:1.4}
+  .option:hover{border-color:#ff6b9d;background:#fff5f9}
+  .option.selected{border-color:#c2185b;background:#ffe0ec}
+  .btn{display:inline-block;background:linear-gradient(135deg,#ff6b9d,#c2185b);color:#fff;
+    border:none;border-radius:14px;padding:14px 24px;font-size:16px;font-weight:600;
+    cursor:pointer;font-family:inherit;transition:transform .1s,box-shadow .15s;width:100%;
+    box-shadow:0 6px 20px rgba(194,24,91,.25)}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(194,24,91,.3)}
+  .btn:active{transform:translateY(0)}
+  .btn.secondary{background:#f5eef7;color:#6b3a58;box-shadow:none;font-weight:500;margin-top:10px}
+  .link-box{display:flex;gap:8px;margin:16px 0}
+  .link-box input{flex:1;border:2px solid #f0e6f2;border-radius:12px;padding:12px 14px;
+    font-size:13px;font-family:'SF Mono',Consolas,monospace;color:#6b3a58;background:#faf7fb;
+    outline:none;min-width:0}
+  .link-box button{background:#c2185b;color:#fff;border:none;border-radius:12px;
+    padding:0 18px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .link-box button.copied{background:#2e9e5b}
+  .note{background:#fff8e1;border-left:4px solid #ffc107;padding:12px 14px;border-radius:8px;
+    font-size:13px;color:#6b5a1f;line-height:1.5;margin-top:16px}
+  .big-score{text-align:center;font-size:64px;font-weight:800;line-height:1;margin:8px 0;
+    background:linear-gradient(135deg,#ff6b9d,#c2185b);
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .verdict{text-align:center;font-size:17px;font-weight:600;color:#6b3a58;margin-bottom:6px}
+  .sub-score{text-align:center;color:#8a7a92;font-size:14px;margin-bottom:24px}
+  .block-result{display:flex;justify-content:space-between;align-items:center;
+    padding:10px 0;border-bottom:1px solid #f0e6f2;font-size:14px}
+  .block-result:last-child{border-bottom:none}
+  .block-result b{color:#c2185b}
+  .detail-q{padding:12px 0;border-bottom:1px solid #f0e6f2;font-size:13px;line-height:1.5}
+  .detail-q:last-child{border-bottom:none}
+  .detail-q .match{color:#2e9e5b;font-weight:600}
+  .detail-q .mismatch{color:#c62828;font-weight:600}
+  .detail-q .qtitle{font-weight:600;color:#4a3a52;margin-bottom:4px}
+  .detail-q .ans{color:#8a7a92;font-size:12px}
+  .heart{text-align:center;font-size:40px;margin-bottom:8px}
+  details{margin-top:16px}
+  summary{cursor:pointer;font-weight:600;color:#c2185b;padding:10px 0;font-size:14px}
+  .footer{text-align:center;margin-top:24px;color:#c9b8d1;font-size:12px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const QUESTIONS = [
+  {block:"Отдых и рутина",q:"Идеальный выходной для нас — это…",a:[
+    "Полежать дома под пледом и никуда не вылезать",
+    "Куда-нибудь съездить, погулять, выбраться в новое место",
+    "Сделать кучу полезных дел и почувствовать продуктивность"]},
+  {block:"Отдых и рутина",q:"Если вечером хочется просто «потюленить», ты скорее…",a:[
+    "Включишь сериал или фильм",
+    "Будешь листать ленту и скроллить соцсети",
+    "Включишь музыку или подкаст"]},
+  {block:"Отдых и рутина",q:"В совместном отпуске тебе важнее…",a:[
+    "Новые места, впечатления и максимум активности",
+    "Тишина, природа и полный релакс",
+    "Комфорт, привычный ритм и никакого стресса"]},
+  {block:"Отдых и рутина",q:"Твой обычный завтрак…",a:[
+    "Каша, омлет, что-то плотное и полноценное",
+    "Бутерброд, йогурт, быстрый перекус",
+    "Кофе/чай и всё, больше ничего не лезет"]},
+  {block:"Отдых и рутина",q:"Если нужно подождать Тиму 40 минут, ты…",a:[
+    "Достанешь телефон и залипнешь в него",
+    "Будешь смотреть по сторонам и наблюдать за людьми",
+    "Помечтаешь и поразмышляешь о планах"]},
+  {block:"Отдых и рутина",q:"Самое раздражающее в быту…",a:[
+    "Беспорядок и разбросанные вещи",
+    "Лишний шум и суета",
+    "Скучная рутина и повторяющиеся дела"]},
+  {block:"Отдых и рутина",q:"Если зовут «просто посидеть» в компании, ты…",a:[
+    "Сразу «за»","Зависит от компании и настроения",
+    "Лучше вдвоём, без лишней толпы"]},
+  {block:"Отдых и рутина",q:"После тяжёлого дня тебе нужно…",a:[
+    "Тишина и немного побыть наедине с собой",
+    "Выговориться и поболтать",
+    "Сменить обстановку: прогулка, движение"]},
+  {block:"Культура и вкусы",q:"Какой фильм выберешь на вечер?",a:[
+    "Комедию, что-то лёгкое и смешное",
+    "Фантастику, фэнтези или приключения",
+    "Драму, триллер или «серьёзное» кино со смыслом"]},
+  {block:"Культура и вкусы",q:"Музыка, которая чаще всего играет в твоих наушниках…",a:[
+    "Поп, хиты, то, что на слуху",
+    "Рок, альтернатива, инди",
+    "Электроника, рэп, что-то необычное"]},
+  {block:"Культура и вкусы",q:"Книга, которая тебе ближе…",a:[
+    "Приключения с динамичным сюжетом",
+    "Нон-фикшн, психология, саморазвитие",
+    "Классика, художественная литература, глубокие тексты"]},
+  {block:"Культура и вкусы",q:"Если бы можно было пойти на один концерт, ты бы выбрала…",a:[
+    "Легенду, огромный стадионный концерт",
+    "Модного артиста, главный тренд сезона",
+    "Камерный зал, ламповый концерт «для своих»"]},
+  {block:"Культура и вкусы",q:"По жизни ты скорее…",a:[
+    "Любишь пробовать новое и экспериментировать",
+    "Выбираешь проверенное и надёжное",
+    "Всё зависит от настроения"]},
+  {block:"Культура и вкусы",q:"Любимый способ провести вечер вдвоём…",a:[
+    "Дома с вкусной едой и фильмом",
+    "В кафе, на прогулке, где-то вне дома",
+    "На мероприятии, в гостях, в шумной компании"]},
+  {block:"Культура и вкусы",q:"Что тебя больше всего цепляет в кино?",a:[
+    "Юмор и классные шутки",
+    "Закрученный сюжет, повороты и интрига",
+    "Эмоции, персонажи и их отношения"]},
+  {block:"Ценности и взгляды",q:"Что для тебя важнее всего в отношениях?",a:[
+    "Поддержка, спокойствие и ощущение надёжного тыла",
+    "Общие приключения и новые эмоции",
+    "Взаимное уважение и личное пространство"]},
+  {block:"Ценности и взгляды",q:"Принимая важное решение, ты опираешься на…",a:[
+    "Чувства и интуицию",
+    "Факты, логику и взвешивание плюсов/минусов",
+    "Советы близких людей"]},
+  {block:"Ценности и взгляды",q:"Главная черта, которую ты ценишь в людях…",a:[
+    "Надёжность и ответственность",
+    "Чувство юмора и лёгкость",
+    "Искренность и честность"]},
+  {block:"Ценности и взгляды",q:"Если бы у тебя выпал абсолютно свободный день, ты бы…",a:[
+    "Помогла кому-то, сделала доброе дело",
+    "Посвятила время себе: спа, хобби, отдых",
+    "Узнала что-то новое: мастер-класс, выставка, мини-поездка"]},
+  {block:"Ценности и взгляды",q:"Что для тебя значит «успех»?",a:[
+    "Стабильность, комфорт и спокойная жизнь",
+    "Признание, достижения и карьерный рост",
+    "Свобода и возможность самой выбирать свой путь"]},
+  {block:"Финал",q:"Ну что, обсудим результаты за чаем или кофе? 😉",a:[
+    "Да, давай сверять ответы!",
+    "Сначала сама всё проанализирую",
+    "Интрига важнее, оставлю в тайне"]}
+];
+
+const state = {
+  mode: "intro",
+  current: 0,
+  answers: new Array(QUESTIONS.length).fill(null),
+  partnerAnswers: null,
+  result: null
+};
+
+const app = document.getElementById("app");
+
+/* ---------- hash encode/decode ---------- */
+function encodeAnswers(arr){
+  const json = JSON.stringify(arr);
+  const bytes = new TextEncoder().encode(json);
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function decodeAnswers(str){
+  try{
+    let s = str.replace(/-/g,"+").replace(/_/g,"/");
+    while(s.length % 4) s += "=";
+    const bin = atob(s);
+    const bytes = new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+    const arr = JSON.parse(new TextDecoder().decode(bytes));
+    if(Array.isArray(arr) && arr.length === QUESTIONS.length &&
+       arr.every(x => Number.isInteger(x) && x >= 0 && x < 3)){
+      return arr;
+    }
+  }catch(e){}
+  return null;
+}
+function parseHash(){
+  const h = location.hash;
+  const m = h && h.match(/^#r=(.+)$/);
+  return m ? decodeAnswers(m[1]) : null;
+}
+function buildShareLink(answers){
+  const base = location.href.split("#")[0];
+  return base + "#r=" + encodeAnswers(answers);
+}
+
+/* ---------- scoring ---------- */
+function compare(a,b){
+  let matches = 0;
+  const perQuestion = [];
+  const perBlock = {};
+  for(let i=0;i<QUESTIONS.length;i++){
+    const match = a[i] === b[i];
+    if(match) matches++;
+    perQuestion.push({match, my:a[i], other:b[i]});
+    const blk = QUESTIONS[i].block;
+    if(!perBlock[blk]) perBlock[blk] = {total:0, matches:0};
+    perBlock[blk].total++;
+    if(match) perBlock[blk].matches++;
+  }
+  return {
+    percent: Math.round(matches / QUESTIONS.length * 100),
+    matches, total: QUESTIONS.length, perQuestion, perBlock
+  };
+}
+function verdict(p){
+  if(p >= 90) return "Вы буквально одно целое 😍";
+  if(p >= 70) return "Отличная совместимость! 💕";
+  if(p >= 50) return "Хорошая база — есть о чём поговорить 😊";
+  if(p >= 30) return "Вы разные — и это тоже интересно 🌗";
+  return "Противоположности притягиваются 😅";
+}
+
+/* ---------- render ---------- */
+function render(){
+  if(state.mode === "intro") renderIntro();
+  else if(state.mode === "quiz") renderQuiz();
+  else if(state.mode === "share") renderShare();
+  else if(state.mode === "result") renderResult();
+}
+
+function renderIntro(){
+  const isPartner = !!state.partnerAnswers;
+  const note = isPartner
+    ? `<div class="note">🎉 Вторая половинка уже ответила! Ответь на вопросы — и вы сразу увидите, насколько совпали.</div>`
+    : `<div class="note">💡 Как это работает: сначала один проходит тест и получает ссылку. Второй открывает её, отвечает — и вы сразу видите процент совпадения.</div>`;
+  app.innerHTML = `
+    <div class="heart">💕</div>
+    <h1>Тест на совместимость<br>Софуня &amp; Тима ❤️</h1>
+    <p class="desc">Проходи честно и не подглядывай! Посмотрим, насколько совпадают ваши вайбы, привычки и взгляды на жизнь.</p>
+    ${note}
+    <button class="btn" id="startBtn" style="margin-top:20px">${isPartner ? "Узнать совместимость" : "Начать тест"}</button>
+  `;
+  document.getElementById("startBtn").onclick = () => {
+    state.mode = "quiz";
+    state.current = 0;
+    render();
+  };
+}
+
+function renderQuiz(){
+  const q = QUESTIONS[state.current];
+  const progress = (state.current / QUESTIONS.length) * 100;
+  const opts = q.a.map((text,i)=>{
+    const sel = state.answers[state.current] === i ? " selected" : "";
+    return `<button class="option${sel}" data-i="${i}">${text}</button>`;
+  }).join("");
+  app.innerHTML = `
+    <div class="progress-wrap"><div class="progress-bar" style="width:${progress}%"></div></div>
+    <div class="block-label">${q.block}</div>
+    <div class="q-num">Вопрос ${state.current + 1} из ${QUESTIONS.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${opts}</div>
+    ${state.current > 0 ? '<button class="btn secondary" id="backBtn">← Назад</button>' : ""}
+  `;
+  app.querySelectorAll(".option").forEach(btn=>{
+    btn.onclick = () => {
+      state.answers[state.current] = parseInt(btn.dataset.i,10);
+      if(state.current < QUESTIONS.length - 1){
+        state.current++;
+        render();
+      } else {
+        finishQuiz();
+      }
+    };
+  });
+  if(state.current > 0){
+    document.getElementById("backBtn").onclick = () => { state.current--; render(); };
+  }
+}
+
+function finishQuiz(){
+  if(state.partnerAnswers){
+    state.result = compare(state.answers, state.partnerAnswers);
+    state.mode = "result";
+  } else {
+    state.mode = "share";
+  }
+  render();
+}
+
+function renderShare(){
+  const link = buildShareLink(state.answers);
+  app.innerHTML = `
+    <div class="heart">💌</div>
+    <h2>Готово! Теперь передай эстафету</h2>
+    <p class="desc">Скопируй ссылку ниже и отправь её второй половинке. Когда она пройдёт тест — вы сразу увидите процент совпадения.</p>
+    <div class="link-box">
+      <input id="shareLink" readonly value="${link}">
+      <button id="copyBtn">Копировать</button>
+    </div>
+    <div class="note">🔒 Ссылка содержит твои ответы. Не пересылай её никому, кроме второй половинки.</div>
+    <button class="btn secondary" id="restartBtn">Пройти заново</button>
+  `;
+  const copyBtn = document.getElementById("copyBtn");
+  copyBtn.onclick = async () => {
+    try{ await navigator.clipboard.writeText(link); }
+    catch(e){
+      const inp = document.getElementById("shareLink");
+      inp.select(); document.execCommand("copy");
+    }
+    copyBtn.textContent = "✓ Скопировано";
+    copyBtn.classList.add("copied");
+    setTimeout(()=>{
+      copyBtn.textContent = "Копировать";
+      copyBtn.classList.remove("copied");
+    }, 2000);
+  };
+  document.getElementById("restartBtn").onclick = resetAll;
+}
+
+function renderResult(){
+  const r = state.result;
+  const blocks = Object.entries(r.perBlock).map(([name,b])=>{
+    const pct = Math.round(b.matches / b.total * 100);
+    return `<div class="block-result"><span>${name}</span><b>${pct}%</b></div>`;
+  }).join("");
+  const details = QUESTIONS.map((q,i)=>{
+    const d = r.perQuestion[i];
+    const mark = d.match
+      ? '<span class="match">✓ совпало</span>'
+      : '<span class="mismatch">✗ разные</span>';
+    const mismatchBlock = d.match ? "" :
+      `<div class="ans">Ты: ${q.a[d.my]}</div><div class="ans">Партнёр: ${q.a[d.other]}</div>`;
+    return `<div class="detail-q">
+      <div class="qtitle">${i+1}. ${q.q}</div>
+      <div>${mark}</div>
+      ${mismatchBlock}
+    </div>`;
+  }).join("");
+  app.innerHTML = `
+    <div class="heart">💖</div>
+    <div class="big-score">${r.percent}%</div>
+    <div class="verdict">${verdict(r.percent)}</div>
+    <div class="sub-score">Совпало ${r.matches} из ${r.total} ответов</div>
+    <h2>По блокам</h2>
+    <div style="margin-bottom:20px">${blocks}</div>
+    <details>
+      <summary>Посмотреть все ответы и расхождения</summary>
+      <div>${details}</div>
+    </details>
+    <button class="btn" style="margin-top:20px" id="restartBtn">Пройти заново</button>
+    <div class="footer">Сделано с ❤️ для Софуни и Тимы</div>
+  `;
+  document.getElementById("restartBtn").onclick = resetAll;
+}
+
+function resetAll(){
+  state.mode = "intro";
+  state.current = 0;
+  state.answers = new Array(QUESTIONS.length).fill(null);
+  state.result = null;
+  if(!state.partnerAnswers){
+    history.replaceState(null, "", location.pathname);
+  }
+  render();
+}
+
+/* ---------- init ---------- */
+state.partnerAnswers = parseHash();
+render();
+</script>
+</body>
+</html>
